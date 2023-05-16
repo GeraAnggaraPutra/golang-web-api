@@ -1,7 +1,8 @@
 package main
 
 import (
-	"log"
+	"fmt"
+	_ "log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -44,7 +45,7 @@ func booksHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
 	title := ctx.Param("title")
 	ctx.JSON(http.StatusOK, gin.H{
-		"id": id,
+		"id":    id,
 		"title": title,
 	})
 }
@@ -53,14 +54,14 @@ func queryHandler(ctx *gin.Context) {
 	id := ctx.Query("id")
 	title := ctx.Query("title")
 	ctx.JSON(http.StatusOK, gin.H{
-		"id": id,
+		"id":    id,
 		"title": title,
 	})
 }
 
 type BookInput struct {
-	Title string
-	Price int
+	Title    string `json:"title" binding:"required"`
+	Price    int    `json:"price" binding:"required,number"`
 	Subtitle string `json:"sub_title"` // var Subtitle dipakai untuk menangkap json yg namanya sub_title
 }
 
@@ -69,12 +70,14 @@ func postBooksHandler(ctx *gin.Context) {
 
 	err := ctx.ShouldBindJSON(&bookInput)
 	if err != nil {
-		log.Fatal(err)
+		ctx.JSON(http.StatusBadRequest, err)
+		fmt.Println(err)
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"title": bookInput.Title,
-		"price": bookInput.Price,
+		"title":    bookInput.Title,
+		"price":    bookInput.Price,
 		"subtitle": bookInput.Subtitle,
 	})
 }
