@@ -1,8 +1,10 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -19,6 +21,7 @@ func main() {
 	router.GET("/hello", helloHandler)
 	router.GET("/books/:id/:title", booksHandler)
 	router.GET("/query", queryHandler)
+	router.POST("/books", postBooksHandler)
 
 	router.Run("localhost:8080")
 }
@@ -52,5 +55,26 @@ func queryHandler(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"id": id,
 		"title": title,
+	})
+}
+
+type BookInput struct {
+	Title string
+	Price int
+	Subtitle string `json:"sub_title"` // var Subtitle dipakai untuk menangkap json yg namanya sub_title
+}
+
+func postBooksHandler(ctx *gin.Context) {
+	var bookInput BookInput
+
+	err := ctx.ShouldBindJSON(&bookInput)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"title": bookInput.Title,
+		"price": bookInput.Price,
+		"subtitle": bookInput.Subtitle,
 	})
 }
