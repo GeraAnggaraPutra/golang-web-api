@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"golang-web-api/entity"
+	"golang-web-api/book"
 )
 
 func RootHandler(ctx *gin.Context) {
@@ -41,7 +41,7 @@ func QueryHandler(ctx *gin.Context) {
 }
 
 func PostBooksHandler(ctx *gin.Context) {
-	var bookInput entity.BookInput
+	var bookInput book.BookInput
 
 	err := ctx.ShouldBindJSON(&bookInput)
 	if err != nil {

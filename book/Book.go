@@ -1,4 +1,4 @@
-package entity
+package book
 
 
 type BookInput struct {

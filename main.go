@@ -1,13 +1,25 @@
 package main
 
 import (
+	"fmt"
 	"golang-web-api/handler"
+	"log"
 	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 func main() {
+
+	dsn := "root:@tcp(127.0.0.1:3306)/golang-web-api?charset=utf8mb4&parseTime=True&loc=Local"
+	_, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal("DB connection error")
+	}
+
+	fmt.Println("Database connection success")
+
 	router := gin.Default()
 
 	// router.GET("/", func(ctx *gin.Context) {
@@ -26,7 +38,7 @@ func main() {
 	v1.POST("/books", handler.PostBooksHandler)
 
 	v2 := router.Group("/v2")
-	
+
 	v2.GET("/hello", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"content": "Ini adalah API Versioning v2",
