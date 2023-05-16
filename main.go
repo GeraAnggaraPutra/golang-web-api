@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"golang-web-api/book"
 	"golang-web-api/handler"
 	"log"
 	"net/http"
@@ -13,12 +14,13 @@ import (
 func main() {
 
 	dsn := "root:@tcp(127.0.0.1:3306)/golang-web-api?charset=utf8mb4&parseTime=True&loc=Local"
-	_, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("DB connection error")
 	}
 
 	fmt.Println("Database connection success")
+	db.AutoMigrate(&book.Book{})
 
 	router := gin.Default()
 
