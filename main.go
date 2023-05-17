@@ -22,6 +22,32 @@ func main() {
 	fmt.Println("Database connection success")
 	db.AutoMigrate(&book.Book{})
 
+	bookRepository := book.NewRepository(db)
+
+	books, err := bookRepository.FindAll()
+	for _, book := range books {
+		fmt.Println("=========================")
+		fmt.Println("Title  : ", book.Title)
+		fmt.Println("Author : ", book.Author)
+	}
+
+	// book, err := bookRepository.FindByID(2)
+	// fmt.Println("Title  : ", book.Title)
+	// fmt.Println("Author : ", book.Author)
+
+	// book := book.Book{
+	// 	Title: "Manusia harimau",
+	// 	Author: "Person",
+	// 	Price: 560000,
+	// 	Rating: 4,
+	// 	Description: "Sungguh aneh manusia berubah jadi harimau",
+	// }
+	// bookRepository.Create(book)
+
+
+//////////////////////////////////////////////////////////////////////
+
+
 	// CREATE
 	// book := book.Book{}
 	// book.Title = "Quantum theory"
