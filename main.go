@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"golang-web-api/book"
 	"golang-web-api/handler"
-	"log"
-	"net/http"
-	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"log"
+	"net/http"
 )
 
 func main() {
@@ -21,6 +21,68 @@ func main() {
 
 	fmt.Println("Database connection success")
 	db.AutoMigrate(&book.Book{})
+
+	// CREATE
+	// book := book.Book{}
+	// book.Title = "Quantum theory"
+	// book.Price = 230000
+	// book.Author = "Kylian"
+	// book.Rating = 4
+	// book.Description = "Everywhere is quantum."
+
+	// err = db.Create(&book).Error
+	// if err != nil {
+	// 	fmt.Println("==========================")
+	// 	fmt.Println("Error creating book record")
+	// 	fmt.Println("==========================")
+	// }
+
+	// READ
+	// var books []book.Book
+	// err = db.Debug().Where("id = ?", 1).Find(&books).Error
+	// if err != nil {
+	// 	fmt.Println("==========================")
+	// 	fmt.Println("Error finding book record")
+	// 	fmt.Println("==========================")
+	// }
+	// for _, b := range books {
+	// 	fmt.Println("Title       :", b.Title)
+	// 	fmt.Println("Price       :", b.Price)
+	// 	fmt.Println("Author      :", b.Author)
+	// 	fmt.Println("Rating      :", b.Rating)
+	// 	fmt.Println("Description :", b.Description)
+	// }
+
+	// UPDATE
+	// var book book.Book
+	// err = db.Debug().Where("id = ?", 1).First(&book).Error
+	// if err != nil {
+	// 	fmt.Println("==========================")
+	// 	fmt.Println("Error finding book record")
+	// 	fmt.Println("==========================")
+	// }
+	// book.Title = "Doraemon"
+	// err = db.Save(&book).Error
+	// if err != nil {
+	// 	fmt.Println("==========================")
+	// 	fmt.Println("Error updating book record")
+	// 	fmt.Println("==========================")
+	// }
+
+	// DELETE
+	// var book book.Book
+	// err = db.Debug().Where("id = ?", 1).First(&book).Error
+	// if err != nil {
+	// 	fmt.Println("=========================")
+	// 	fmt.Println("Error finding book record")
+	// 	fmt.Println("=========================")
+	// }
+	// err = db.Delete(book).Error
+	// if err != nil {
+	// 	fmt.Println("=========================")
+	// 	fmt.Println("Error delete book record")
+	// 	fmt.Println("=========================")
+	// }
 
 	router := gin.Default()
 
