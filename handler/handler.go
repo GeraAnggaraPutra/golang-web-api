@@ -2,10 +2,11 @@ package handler
 
 import (
 	"fmt"
+	"golang-web-api/book"
 	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"golang-web-api/book"
 )
 
 type bookHandler struct {
@@ -69,10 +70,10 @@ func (h *bookHandler) PostBooksHandler(ctx *gin.Context) {
 	book, err := h.bookService.Create(bookRequest)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"errors" : err,
+			"errors": err,
 		})
 
-		return 
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
@@ -89,7 +90,22 @@ func (h *bookHandler) GetBooks(ctx *gin.Context) {
 		return
 	}
 
+	var booksResponse []book.BookResponse
+
+	for _, b := range books {
+		bookResponse := book.BookResponse{
+			ID:          b.ID,
+			Title:       b.Title,
+			Price:       b.Price,
+			Author:      b.Author,
+			Rating:      b.Rating,
+			Description: b.Description,
+		}
+
+		booksResponse = append(booksResponse, bookResponse)
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{
-		"data": books,
+		"data": booksResponse,
 	})
 }
