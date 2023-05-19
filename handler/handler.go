@@ -157,6 +157,25 @@ func (h *bookHandler) GetBook(ctx *gin.Context) {
 	})
 }
 
+func (h *bookHandler) DeleteBook(ctx *gin.Context) {
+	idString := ctx.Param("id")
+	id, _ := strconv.Atoi(idString)
+
+	b, err := h.bookService.Delete(id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"errors": err,
+		})
+		return
+	}
+
+	bookResponse := converToBookResponse(b)
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": bookResponse,
+	})
+}
+
 func converToBookResponse(b book.Book) book.BookResponse {
 	return book.BookResponse{
 		ID:          b.ID,

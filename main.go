@@ -133,6 +133,7 @@ func main() {
 	v1.GET("/books-db", bookHandler.GetBooks)
 	v1.GET("/book-db/:id", bookHandler.GetBook)
 	v1.PUT("/book-db/:id", bookHandler.UpdateBook)
+	v1.DELETE("/book-db/:id", bookHandler.DeleteBook)
 
 	v2 := router.Group("/v2")
 
