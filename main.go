@@ -127,11 +127,12 @@ func main() {
 	v1.GET("/hello", bookHandler.HelloHandler)
 	v1.GET("/books/:id/:title", bookHandler.BooksHandler)
 	v1.GET("/query", bookHandler.QueryHandler)
-	v1.POST("/books", bookHandler.PostBooksHandler)
-
+	
 	// connect database
+	v1.POST("/books", bookHandler.CreateBook)
 	v1.GET("/books-db", bookHandler.GetBooks)
 	v1.GET("/book-db/:id", bookHandler.GetBook)
+	v1.PUT("/book-db/:id", bookHandler.UpdateBook)
 
 	v2 := router.Group("/v2")
 
