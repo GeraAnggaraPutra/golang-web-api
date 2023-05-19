@@ -100,6 +100,8 @@ func (h *bookHandler) GetBooks(ctx *gin.Context) {
 			Author:      b.Author,
 			Rating:      b.Rating,
 			Description: b.Description,
+			CreatedAt: b.CreatedAt,
+			UpdatedAt: b.UpdatedAt,
 		}
 
 		booksResponse = append(booksResponse, bookResponse)
