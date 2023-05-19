@@ -41,7 +41,7 @@ func QueryHandler(ctx *gin.Context) {
 }
 
 func PostBooksHandler(ctx *gin.Context) {
-	var bookInput book.BookInput
+	var bookInput book.BookRequest
 
 	err := ctx.ShouldBindJSON(&bookInput)
 	if err != nil {
@@ -61,6 +61,5 @@ func PostBooksHandler(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"title":    bookInput.Title,
 		"price":    bookInput.Price,
-		"subtitle": bookInput.Subtitle,
 	})
 }

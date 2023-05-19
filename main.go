@@ -23,26 +23,27 @@ func main() {
 	db.AutoMigrate(&book.Book{})
 
 	bookRepository := book.NewRepository(db)
+	bookService := book.NewService(bookRepository)
 
-	books, err := bookRepository.FindAll()
-	for _, book := range books {
-		fmt.Println("=========================")
-		fmt.Println("Title  : ", book.Title)
-		fmt.Println("Author : ", book.Author)
-	}
+	// books, err := bookRepository.FindAll()
+	// for _, book := range books {
+	// 	fmt.Println("=========================")
+	// 	fmt.Println("Title  : ", book.Title)
+	// 	fmt.Println("Author : ", book.Author)
+	// }
 
 	// book, err := bookRepository.FindByID(2)
 	// fmt.Println("Title  : ", book.Title)
 	// fmt.Println("Author : ", book.Author)
 
-	// book := book.Book{
-	// 	Title: "Manusia harimau",
-	// 	Author: "Person",
-	// 	Price: 560000,
-	// 	Rating: 4,
-	// 	Description: "Sungguh aneh manusia berubah jadi harimau",
-	// }
-	// bookRepository.Create(book)
+	bookRequest := book.BookRequest{
+		Title: "Forexxx",
+		Author: "Rob",
+		Price: "120000",
+		Rating: "4",
+		Description: "Trading forex",
+	}
+	bookService.Create(bookRequest)
 
 
 //////////////////////////////////////////////////////////////////////
