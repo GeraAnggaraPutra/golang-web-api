@@ -129,6 +129,9 @@ func main() {
 	v1.GET("/query", bookHandler.QueryHandler)
 	v1.POST("/books", bookHandler.PostBooksHandler)
 
+	// connect database
+	v1.GET("/books-db", bookHandler.GetBooks)
+
 	v2 := router.Group("/v2")
 
 	v2.GET("/hello", func(ctx *gin.Context) {

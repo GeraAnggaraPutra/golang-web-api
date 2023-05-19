@@ -79,3 +79,17 @@ func (h *bookHandler) PostBooksHandler(ctx *gin.Context) {
 		"data": book,
 	})
 }
+
+func (h *bookHandler) GetBooks(ctx *gin.Context) {
+	books, err := h.bookService.FindAll()
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"errors": err,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": books,
+	})
+}
