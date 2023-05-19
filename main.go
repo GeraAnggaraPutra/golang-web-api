@@ -24,6 +24,7 @@ func main() {
 
 	bookRepository := book.NewRepository(db)
 	bookService := book.NewService(bookRepository)
+	bookHandler := handler.NewBookHandler(bookService)
 
 	// books, err := bookRepository.FindAll()
 	// for _, book := range books {
@@ -36,14 +37,14 @@ func main() {
 	// fmt.Println("Title  : ", book.Title)
 	// fmt.Println("Author : ", book.Author)
 
-	bookRequest := book.BookRequest{
-		Title: "Forexxx",
-		Author: "Rob",
-		Price: "120000",
-		Rating: "4",
-		Description: "Trading forex",
-	}
-	bookService.Create(bookRequest)
+	// bookRequest := book.BookRequest{
+	// 	Title: "Forexxx",
+	// 	Author: "Rob",
+	// 	Price: "120000",
+	// 	Rating: "4",
+	// 	Description: "Trading forex",
+	// }
+	// bookService.Create(bookRequest)
 
 
 //////////////////////////////////////////////////////////////////////
@@ -122,11 +123,11 @@ func main() {
 
 	v1 := router.Group("/v1")
 
-	v1.GET("/", handler.RootHandler)
-	v1.GET("/hello", handler.HelloHandler)
-	v1.GET("/books/:id/:title", handler.BooksHandler)
-	v1.GET("/query", handler.QueryHandler)
-	v1.POST("/books", handler.PostBooksHandler)
+	v1.GET("/", bookHandler.RootHandler)
+	v1.GET("/hello", bookHandler.HelloHandler)
+	v1.GET("/books/:id/:title", bookHandler.BooksHandler)
+	v1.GET("/query", bookHandler.QueryHandler)
+	v1.POST("/books", bookHandler.PostBooksHandler)
 
 	v2 := router.Group("/v2")
 
