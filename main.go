@@ -131,6 +131,7 @@ func main() {
 
 	// connect database
 	v1.GET("/books-db", bookHandler.GetBooks)
+	v1.GET("/book-db/:id", bookHandler.GetBook)
 
 	v2 := router.Group("/v2")
 

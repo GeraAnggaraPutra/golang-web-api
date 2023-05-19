@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"golang-web-api/book"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -100,8 +101,8 @@ func (h *bookHandler) GetBooks(ctx *gin.Context) {
 			Author:      b.Author,
 			Rating:      b.Rating,
 			Description: b.Description,
-			CreatedAt: b.CreatedAt,
-			UpdatedAt: b.UpdatedAt,
+			CreatedAt:   b.CreatedAt,
+			UpdatedAt:   b.UpdatedAt,
 		}
 
 		booksResponse = append(booksResponse, bookResponse)
@@ -109,5 +110,33 @@ func (h *bookHandler) GetBooks(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": booksResponse,
+	})
+}
+
+func (h *bookHandler) GetBook(ctx *gin.Context) {
+	idString := ctx.Param("id")
+	id, _ := strconv.Atoi(idString)
+
+	b, err := h.bookService.FindByID(id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"errors": err,
+		})
+		return
+	}
+
+	bookResponse := book.BookResponse{
+		ID:          b.ID,
+		Title:       b.Title,
+		Price:       b.Price,
+		Author:      b.Author,
+		Rating:      b.Rating,
+		Description: b.Description,
+		CreatedAt:   b.CreatedAt,
+		UpdatedAt:   b.UpdatedAt,
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": bookResponse,
 	})
 }
