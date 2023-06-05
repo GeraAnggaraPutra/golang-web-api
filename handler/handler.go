@@ -3,11 +3,12 @@ package handler
 import (
 	"fmt"
 	"golang-web-api/book"
+	"log"
 	"net/http"
 	"strconv"
-
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"gopkg.in/gomail.v2"
 )
 
 type bookHandler struct {
@@ -53,7 +54,7 @@ func (h *bookHandler) QueryHandler(ctx *gin.Context) {
 func (h *bookHandler) CreateBook(ctx *gin.Context) {
 	var bookRequest book.BookRequest
 
-	err := ctx.ShouldBindJSON(&bookRequest)
+	err := ctx.ShouldBind(&bookRequest)
 	if err != nil {
 
 		errorMessages := []string{}
@@ -78,7 +79,8 @@ func (h *bookHandler) CreateBook(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"data": book,
+		"message": "Book created successfully",
+		"data": convertToBookResponse(book),
 	})
 }
 
@@ -87,7 +89,7 @@ func (h *bookHandler) UpdateBook(ctx *gin.Context) {
 	idString := ctx.Param("id")
 	id, _ := strconv.Atoi(idString)
 
-	err := ctx.ShouldBindJSON(&bookUpdate)
+	err := ctx.ShouldBind(&bookUpdate)
 	if err != nil {
 
 		errorMessages := []string{}
@@ -112,7 +114,8 @@ func (h *bookHandler) UpdateBook(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"data": converToBookResponse(book),
+		"message": "Book updated successfully",
+		"data": convertToBookResponse(book),
 	})
 }
 
@@ -128,7 +131,7 @@ func (h *bookHandler) GetBooks(ctx *gin.Context) {
 	var booksResponse []book.BookResponse
 
 	for _, b := range books {
-		bookResponse := converToBookResponse(b)
+		bookResponse := convertToBookResponse(b)
 
 		booksResponse = append(booksResponse, bookResponse)
 	}
@@ -150,7 +153,7 @@ func (h *bookHandler) GetBook(ctx *gin.Context) {
 		return
 	}
 
-	bookResponse := converToBookResponse(b)
+	bookResponse := convertToBookResponse(b)
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": bookResponse,
@@ -169,14 +172,14 @@ func (h *bookHandler) DeleteBook(ctx *gin.Context) {
 		return
 	}
 
-	bookResponse := converToBookResponse(b)
+	bookResponse := convertToBookResponse(b)
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": bookResponse,
 	})
 }
 
-func converToBookResponse(b book.Book) book.BookResponse {
+func convertToBookResponse(b book.Book) book.BookResponse {
 	return book.BookResponse{
 		ID:          b.ID,
 		Title:       b.Title,
@@ -187,4 +190,46 @@ func converToBookResponse(b book.Book) book.BookResponse {
 		CreatedAt:   b.CreatedAt,
 		UpdatedAt:   b.UpdatedAt,
 	}
+}
+
+func SendMail(ctx *gin.Context) {
+	subject := ctx.Param("subject")
+	body := ctx.Param("body")
+
+	const CONFIG_SMTP_HOST = "smtp.gmail.com"
+	const CONFIG_SMTP_PORT = 587
+	const CONFIG_SENDER_NAME = "PT. Makmur Subur Jaya <gerdyoung1234@gmail.com>"
+	const CONFIG_AUTH_EMAIL = "anggaragera@gmail.com"
+	const CONFIG_AUTH_PASSWORD = "xdsoxgooroerestq"
+
+	mailer := gomail.NewMessage()
+	mailer.SetHeader("From", CONFIG_SENDER_NAME)
+	mailer.SetHeader("To", "anggaragera@gmail.com")
+	mailer.SetAddressHeader("Cc", "gerdyoung1234@gmail.com", "Testing")
+	mailer.SetHeader("Subject", subject)
+	mailer.SetBody("text/html", "Hello, <b>"+body+"</b>")
+	// mailer.Attach("./sample.png")
+
+	dialer := gomail.NewDialer( 
+		CONFIG_SMTP_HOST,
+		CONFIG_SMTP_PORT,
+		CONFIG_AUTH_EMAIL,
+		CONFIG_AUTH_PASSWORD,
+	)
+
+	err := dialer.DialAndSend(mailer)
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"status": "Error",
+		})
+		log.Fatal(err.Error())
+
+	}
+
+	log.Println("Mail sent!")
+	ctx.JSON(http.StatusOK, gin.H{
+		"status": "Success",
+	})
+
+	return
 }
